@@ -21,6 +21,7 @@ This module was written to solve a need for the Variable Pitch
 Example
 -------
 
+```
 >>> import vpcc
 >>> pt = vpcc.Point('gridref', 'TG 51409 13177')
 >>> print pt['wgs84']
@@ -32,6 +33,7 @@ Example
   OSGB36 latitide/longitude: ['N52 42 32.1336', 'E003 17 06.9396']
   UK Grid Reference (numeric E/N): [651409, 313177]
   WGS84 latitude/longitude: ['N52 42 33.3018', 'E003 17 11.5673']
+```
 
 Development
 -----------
