@@ -18,6 +18,16 @@ import math
 import re
 
 
+def viewitems(obj, **kwargs):
+    """ Provide support for iterating over a dict in both
+        Python 2 and 3.
+        Code from the future module.
+    """
+    func = getattr(obj, "viewitems", None)
+    if not func:
+        func = obj.items
+    return func(**kwargs)
+
 class InvalidScheme(Exception):
     pass
 
@@ -53,11 +63,21 @@ class Point(object):
     }
 
     ELLIPSIS = {
-        'WGS84': {'a': 6378137, 'b': 6356752.3142, 'f': 1/298.257223563},
-        'GRS80': {'a': 6378137, 'b': 6356752.314140, 'f': 1/298.257222101},
-        'Airy1830': {'a': 6377563.396, 'b': 6356256.910, 'f': 1/299.3249646},
-        'AiryModified': {'a': 6377340.189, 'b': 6356034.448, 'f': 1/299.32496},
-        'Intl1924': {'a': 6378388.000, 'b': 6356911.946, 'f': 1/297.0}
+        'WGS84': {'a': 6378137, 
+                  'b': 6356752.3142, 
+                  'f': 1/298.257223563},
+        'GRS80': {'a': 6378137, 
+                  'b': 6356752.314140, 
+                  'f': 1/298.257222101},
+        'Airy1830': {'a': 6377563.396, 
+                     'b': 6356256.910, 
+                     'f': 1/299.3249646},
+        'AiryModified': {'a': 6377340.189, 
+                         'b': 6356034.448, 
+                         'f': 1/299.32496},
+        'Intl1924': {'a': 6378388.000, 
+                     'b': 6356911.946, 
+                     'f': 1/297.0}
     }
 
     DATUM_TRANSFORM = {
@@ -133,7 +153,7 @@ class Point(object):
             },
         }
 
-        for poss, how in conversions[scheme].iteritems():
+        for poss, how in viewitems(conversions[scheme]):
             if poss in self.coords:
                 for fn in how:
                     if fn() != True:
@@ -151,7 +171,7 @@ class Point(object):
                 _degree_formatter(self.coords[scheme][1], 'W','E', 3)]
 
     def dump(self):
-        for k,v in self.coords.iteritems():
+        for k,v in viewitems(self.coords):
             print("  %s: %s" % (self.SCHEME_TEXT[k], self.pretty_string(k)))
 
     def __getitem__(self, value):
@@ -403,7 +423,7 @@ class Point(object):
 
         if scheme1 == 'osgb36' and scheme2 == 'wgs84':
             t = {}
-            for k,v in self.DATUM_TRANSFORM['toOSGB36'].iteritems():
+            for k,v in viewitems(self.DATUM_TRANSFORM['toOSGB36']):
                 t[k] = -v
             e1 = self.ELLIPSIS['Airy1830']
             e2 = self.ELLIPSIS['WGS84']

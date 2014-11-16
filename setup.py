@@ -8,23 +8,24 @@ from unittest import TestLoader, TextTestRunner
 
 class TestCommand(Command):
     """ Run module test suite """
-    user_options = [('verbosity=', 'v', 'Increase verbosity')]
-
+    description="Run tests"
+    user_options = []
+    
     def initialize_options(self):
         self._dir = os.getcwd()
-        self.verbosity = 1
 
     def finalize_options(self):
         pass
-
+        
     def run(self):
         testfiles = []
         for poss_fn in os.listdir(os.path.join(self._dir, 'tests')):
             if not poss_fn.endswith('_test.py'):
                 continue
-            testfiles.append('.'.join(['tests', os.path.splitext(poss_fn)[0]]))
+            testfiles.append('.'.join(['tests', 
+                                       os.path.splitext(poss_fn)[0]]))
         tests = TestLoader().loadTestsFromNames(testfiles)
-        t = TextTestRunner(verbosity=self.verbosity)
+        t = TextTestRunner(verbosity=self.verbose)
         t.run(tests)
 
 

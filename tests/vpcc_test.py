@@ -51,16 +51,18 @@ class TestCase1(unittest.TestCase):
                 pt = vpcc.Point(t[0][0], *t[0][1:])
             except (vpcc.InvalidScheme, vpcc.ConversionError):
                 self.fail("Invalid point creation")
+
             for ck in t[1:]:
                 val = pt[ck[0]]
                 if type(val) is list:
                     if len(val) != len(ck[1:]):
                         self.fail("Didn't get expected style of value")
+
                     for i in range(len(val)):
                         if val[i] != ck[i + 1]:
                             self.fail("Returned value %d didn't match (%d vs %s)" % (i, val[i], ck[i+1]))
                 elif val != ck[1]:
-                    self.fail("Returned value didn't match expected")
+                    self.fail("Returned value didn't match expected.\n    Expected {0} but got {1}".format(val, ck[1]))
 
 
 def test_suite():
